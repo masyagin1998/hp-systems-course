@@ -1,6 +1,10 @@
 // gcc -g -Wall -Wextra -O2 malloc_mmap_brk.c -o malloc_mmap_brk
 // strace ./malloc_mmap_brk
 
+// ответить на вопросы:
+// почему мы видим то brk, то mmap в strace?
+// что было бы, если бы вместо malloc был jemalloc?
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
