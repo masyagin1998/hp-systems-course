@@ -1,0 +1,5 @@
+htop --tree
+
+pstree -p
+
+ls -la /sbin/init
