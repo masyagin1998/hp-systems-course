@@ -57,6 +57,8 @@ void run_client(shared_mem_t *shm) {
 }
 
 int main() {
+    sleep(5);
+
     int fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
     if (fd == -1) {
         perror("shm_open");

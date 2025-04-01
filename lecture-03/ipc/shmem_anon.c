@@ -57,6 +57,8 @@ void run_client(shared_mem_t *shm) {
 }
 
 int main() {
+    sleep(5);
+
     shared_mem_t *shm = mmap(NULL, sizeof(shared_mem_t),
                              PROT_READ | PROT_WRITE,
                              MAP_SHARED | MAP_ANONYMOUS,
