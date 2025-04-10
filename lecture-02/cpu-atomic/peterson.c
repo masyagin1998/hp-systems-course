@@ -1,4 +1,4 @@
-// gcc -std=c11 -O2 -Wall -Wextra -pthread peterson.c -o peterson
+// gcc -std=c11 -O2 -Wall -Wextra -lc -D_XOPEN_SOURCE=500 -pthread peterson.c -o peterson
 // ./peterson
 
 // разница volatile и atomic
