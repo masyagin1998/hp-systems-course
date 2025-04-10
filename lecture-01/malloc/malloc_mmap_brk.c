@@ -22,6 +22,8 @@ int main() {
             perror("malloc (small)");
             exit(EXIT_FAILURE);
         }
+        free(ptr);
+        ptr = NULL;
     }
 
     for (size_t i = 0; i < NUM_LARGE_ALLOCS; ++i) {
@@ -30,6 +32,8 @@ int main() {
             perror("malloc (large)");
             exit(EXIT_FAILURE);
         }
+        free(ptr);
+        ptr = NULL;
     }
 
     return 0;
