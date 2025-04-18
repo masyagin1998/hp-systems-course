@@ -1,5 +1,5 @@
-// go build -o tcp tcp.go
-// ./tcp
+// go build -o echo echo.go
+// ./echo
 
 package main
 
