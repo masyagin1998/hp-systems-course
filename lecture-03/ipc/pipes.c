@@ -3,7 +3,7 @@
 // strace ./pipes
 // strace -c -e write ./pipes
 
-// переделать на буферизованный ввод/вывод
+// [✓] Redo for buffered I/O 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,15 +18,25 @@ void run_server(int read_fd, int write_fd) {
     char buffer[BUF_SIZE];
 
     for (int i = 0; i < ITERATIONS; ++i) {
-        ssize_t pos = 0;
-        char c;
-        while (read(read_fd, &c, 1) == 1 && c != '\0') {
-            if (pos < BUF_SIZE - 1) {
-                buffer[pos++] = c;
-            }
-        }
-        buffer[pos] = '\0';
+        // Per buffer read
+        ssize_t read_num = 0;
+        read_num = read(read_fd, &buffer, sizeof(buffer)); 
+        buffer[read_num] = '\0';
 
+        /* Per character read (Very consuming & Lot of syscall per character) 
+        every read/write function lead to system call to the kernel.
+        so it's very bad to make read for every character need to be read 
+        
+         ssize_t pos = 0;
+         char c;
+         while (read(read_fd, &c, 1) == 1 && c != '\0') {
+             if (pos < BUF_SIZE - 1) {
+                 buffer[pos++] = c;
+             }
+         }
+         buffer[pos] = '\0';
+        
+         */
         printf("%d got message \"%s\" from client\n", getpid(), buffer);
 
         write(write_fd, buffer, strlen(buffer));
@@ -36,7 +46,6 @@ void run_server(int read_fd, int write_fd) {
 
 void run_client(int write_fd, int read_fd) {
     char buffer[BUF_SIZE];
-    char reply[BUF_SIZE];
 
     for (int i = 0; i < ITERATIONS; ++i) {
         snprintf(buffer, sizeof(buffer), "ping server %d", i);
@@ -45,16 +54,29 @@ void run_client(int write_fd, int read_fd) {
         write(write_fd, buffer, strlen(buffer));
         write(write_fd, "\0", 1);
 
-        ssize_t pos = 0;
-        char c;
-        while (read(read_fd, &c, 1) == 1 && c != '\0') {
-            if (pos < BUF_SIZE - 1) {
-                reply[pos++] = c;
-            }
-        }
-        reply[pos] = '\0';
+        // Buffer read
+        ssize_t read_num = 0;
+        read_num = read(read_fd, &buffer, sizeof(buffer));
+        if (read_num > 0 && buffer[read_num-1] != '\0') {
+            buffer[read_num] = '\0';
+        } 
 
-        printf("%d got message \"%s\" from server\n", getpid(), reply);
+        /* Per character read (Very consuming & Lot of syscall per character) 
+        every read/write function lead to system call to the kernel.
+        so it's very bad to make read for every character need to be read 
+        
+        
+        ssize_t pos = 0;
+         char c;
+         while (read(read_fd, &c, 1) == 1 && c != '\0') {
+             if (pos < BUF_SIZE - 1) {
+                 reply[pos++] = c;
+             }
+         }
+         reply[pos] = '\0';
+        
+         */
+        printf("%d got message \"%s\" from server\n", getpid(), buffer);
         sleep(1);
     }
 }
