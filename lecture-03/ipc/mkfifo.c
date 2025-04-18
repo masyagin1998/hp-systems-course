@@ -3,6 +3,11 @@
 // strace ./mkfifo
 // strace -c -e write ./mkfifo
 
+
+// Question: Why if we try to read from the MKFIFO file in runtime, the flow of program blocks?
+// cat /tmp/mkfifo_client_to_server
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -47,6 +52,7 @@ void run_client(int write_fd, int read_fd) {
 
         write(write_fd, buffer, strlen(buffer));
         write(write_fd, "\0", 1);
+
 
         ssize_t pos = 0;
         char c;
